@@ -1,5 +1,7 @@
 package ru.bedward70.conwaysgameoflife.v3;
 
+import ru.bedward70.conwaysgameoflife.v3.game.GenGame;
+
 public class GenGameImpl implements GenGame {
     private boolean runing;
 
@@ -16,8 +18,8 @@ public class GenGameImpl implements GenGame {
     }
 
     @Override
-    public boolean isRun() {
-        System.out.println("isRun");
+    public boolean isRunning() {
+        System.out.println("isRunning");
         return runing;
     }
 
