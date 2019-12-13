@@ -17,10 +17,12 @@ public class PaintStrategySimple implements PaintStrategy {
 
     private final BufferedImage foodImg;
     private final BufferedImage mineralImg;
+    private final BufferedImage ping;
 
     public PaintStrategySimple() throws IOException {
         this.foodImg = ImageIO.read(new File("images/food_8_4.png"));
         this.mineralImg = ImageIO.read(new File("images/mineral_8_4.png"));
+        this.ping = ImageIO.read(new File("images/pink_8.png"));
     }
 
     @Override
@@ -35,6 +37,9 @@ public class PaintStrategySimple implements PaintStrategy {
         if (!isNull(model)) {
             paintByModel(big, model, this.foodImg, (0x00ff & model.getFood()), 256);
             paintByModel(big, model, this.mineralImg, (0x00ff & model.getMineral()), 256);
+            if (!isNull(model.getModel())) {
+                big.drawImage(this.ping, 0, 0, null);
+            }
         }
         big.dispose();
 

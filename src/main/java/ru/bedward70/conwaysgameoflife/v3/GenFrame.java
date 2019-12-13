@@ -1,7 +1,6 @@
 package ru.bedward70.conwaysgameoflife.v3;
 
 import ru.bedward70.conwaysgameoflife.v3.panel.GenPanel;
-import ru.bedward70.conwaysgameoflife.v3.toolbar.GenToolBar;
 
 import javax.swing.*;
 import java.awt.*;

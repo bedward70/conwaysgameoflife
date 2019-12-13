@@ -47,7 +47,7 @@ public class GenPanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Insets b = getInsets();
-        final PaintModel[][] models = field.getModels();
+        final PaintModel[][] models = field.getPaintModels();
         for (int y = 0; y < field.getHeight(); y++) {
             for (int x = 0; x < field.getWidth(); x++) {
                 final PaintModel model = models[x][y];

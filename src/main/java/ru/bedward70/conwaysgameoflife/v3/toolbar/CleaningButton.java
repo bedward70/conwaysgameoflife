@@ -7,10 +7,10 @@ import java.awt.*;
 
 public class CleaningButton extends JButton {
 
-    public CleaningButton(final Cleaning game) {
+    public CleaningButton(final Runnable runnable) {
         super("Очистить");
         setMaximumSize(new Dimension(100, 50));
         // очистка поля
-        addActionListener(e -> game.clean());
+        addActionListener(e -> runnable.run());
     }
 }

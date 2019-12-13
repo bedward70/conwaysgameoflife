@@ -1,20 +1,13 @@
 package ru.bedward70.conwaysgameoflife.v3;
 
-import ru.bedward70.conwaysgameoflife.v3.game.Field;
-import ru.bedward70.conwaysgameoflife.v3.paint.PaintModel;
-import ru.bedward70.conwaysgameoflife.v3.paint.PaintStrategy;
+import ru.bedward70.conwaysgameoflife.v3.game.GenGameImpl;
 import ru.bedward70.conwaysgameoflife.v3.paint.PaintStrategySimple;
 import ru.bedward70.conwaysgameoflife.v3.panel.GenPanel;
-import ru.bedward70.conwaysgameoflife.v3.toolbar.GenToolBar;
+import ru.bedward70.conwaysgameoflife.v3.toolbar.CleaningButton;
+import ru.bedward70.conwaysgameoflife.v3.toolbar.RunningButton;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-
-import static java.util.Objects.isNull;
 
 public class App {
 
@@ -25,26 +18,34 @@ public class App {
         IllegalAccessException,
         IOException {
 
-        final GenGameImpl game = new GenGameImpl(10, 10);
-        final PaintStrategySimple paintStrategy = new PaintStrategySimple();
+        final AppAction appAction = new AppAction();
 
-        int b = 0x00ff;
-        System.out.println("" + ((int) b));
+        final GenGameImpl game = new GenGameImpl(10, 10);
+
+        final GenPanel genPanel = new GenPanel(
+            32,
+            game,
+            new PaintStrategySimple()
+        );
+        appAction.setRepaint(() -> genPanel.repaint());
+
+        final JToolBar toolBar = new JToolBar();
+        toolBar.setFloatable(false);
+        toolBar.add(new RunningButton(game));
+        toolBar.add(new CleaningButton(() -> appAction.executeClean()));
 
 
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         SwingUtilities.invokeLater(
             () -> {
+
                 new GenFrame(
                     "GenFrame",
-                    new GenToolBar(game),
-                    new GenPanel(
-                        16,
-                        game,
-                        paintStrategy
-                    )
+                    toolBar,
+                    genPanel
                 );
             }
         );
+
     }
 }

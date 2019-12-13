@@ -8,5 +8,5 @@ public interface Field {
 
     int getHeight();
 
-    PaintModel[][] getModels();
+    PaintModel[][] getPaintModels();
 }
