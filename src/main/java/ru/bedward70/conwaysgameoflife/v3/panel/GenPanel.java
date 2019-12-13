@@ -12,16 +12,18 @@ public class GenPanel extends JPanel {
     /**
      * Размер клетки на экране.
      */
-    private int cellSize = 8;
+    private final int cellSize;
     /**
      * Промежуток между клетками.
      */
-    private int cellGap = 1;
+    private final int cellGap;
 
     private final Field field;
     private PaintStrategy paintStrategy;
 
-    public GenPanel(final Field field, final PaintStrategy paintStrategy) {
+    public GenPanel(final int cellSize, final Field field, final PaintStrategy paintStrategy) {
+        this.cellSize = cellSize;
+        this.cellGap = this.cellSize/8;
         this.field = field;
         this.paintStrategy = paintStrategy;
         setBackground(Color.BLACK);
@@ -45,9 +47,10 @@ public class GenPanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Insets b = getInsets();
+        final PaintModel[][] models = field.getModels();
         for (int y = 0; y < field.getHeight(); y++) {
             for (int x = 0; x < field.getWidth(); x++) {
-                final PaintModel model = field.getModel(x, y);
+                final PaintModel model = models[x][y];
                 paintStrategy.paint(
                     g,
                     b.left + cellGap + x * (cellSize + cellGap),

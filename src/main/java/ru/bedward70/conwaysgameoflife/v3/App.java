@@ -3,11 +3,18 @@ package ru.bedward70.conwaysgameoflife.v3;
 import ru.bedward70.conwaysgameoflife.v3.game.Field;
 import ru.bedward70.conwaysgameoflife.v3.paint.PaintModel;
 import ru.bedward70.conwaysgameoflife.v3.paint.PaintStrategy;
+import ru.bedward70.conwaysgameoflife.v3.paint.PaintStrategySimple;
 import ru.bedward70.conwaysgameoflife.v3.panel.GenPanel;
 import ru.bedward70.conwaysgameoflife.v3.toolbar.GenToolBar;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import static java.util.Objects.isNull;
 
 public class App {
 
@@ -15,49 +22,29 @@ public class App {
         throws ClassNotFoundException,
         UnsupportedLookAndFeelException,
         InstantiationException,
-        IllegalAccessException {
+        IllegalAccessException,
+        IOException {
+
+        final GenGameImpl game = new GenGameImpl(10, 10);
+        final PaintStrategySimple paintStrategy = new PaintStrategySimple();
+
+        int b = 0x00ff;
+        System.out.println("" + ((int) b));
+
 
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         SwingUtilities.invokeLater(
-            () -> new GenFrame(
-                "GenFrame",
-                new GenToolBar(new GenGameImpl()),
-                new GenPanel(
-                    getField(),
-                    getPaintStrategy()
-                )
-            )
+            () -> {
+                new GenFrame(
+                    "GenFrame",
+                    new GenToolBar(game),
+                    new GenPanel(
+                        16,
+                        game,
+                        paintStrategy
+                    )
+                );
+            }
         );
-    }
-
-    private static Field getField() {
-        return new Field() {
-
-            @Override
-            public int getWidth() {
-                return 100;
-            }
-
-            @Override
-            public int getHeight() {
-                return 100;
-            }
-
-            @Override
-            public PaintModel getModel(int x, int y) {
-                return null;
-            }
-        };
-    }
-
-    private static PaintStrategy getPaintStrategy() {
-        return new PaintStrategy() {
-
-            @Override
-            public void paint(Graphics g, int x, int y, int w, int h, PaintModel model) {
-                g.setColor(new Color(0x505050));
-                g.fillRect(x, y, w, h);
-            }
-        };
     }
 }
