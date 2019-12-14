@@ -8,5 +8,7 @@ public interface Model {
 
     int getY();
 
+    boolean isAlife();
+
     void turn(GenModelGame game);
 }

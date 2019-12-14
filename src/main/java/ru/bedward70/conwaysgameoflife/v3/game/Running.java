@@ -6,4 +6,6 @@ public interface Running {
     void stop();
 
     void start();
+
+    void setUpdateDelay(int updateDelay);
 }

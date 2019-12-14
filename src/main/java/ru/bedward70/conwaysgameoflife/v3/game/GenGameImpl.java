@@ -4,6 +4,7 @@ import ru.bedward70.conwaysgameoflife.v3.paint.PaintModel;
 import ru.bedward70.conwaysgameoflife.v3.paint.PaintModelImpl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -16,8 +17,6 @@ public class GenGameImpl implements GenGame, GenModelGame, Field {
     private final LinkedList<Model> models = new LinkedList<>();
 
     private Random random = new Random();
-
-    private boolean running;
 
     public GenGameImpl(final int width, final int height) {
         this.width = width;
@@ -33,7 +32,7 @@ public class GenGameImpl implements GenGame, GenModelGame, Field {
         }
         int x = random.nextInt(width);
         int y = random.nextInt(height);
-        Model model = new ModelImpl(ModelDirection.FRONT, x, y);
+        Model model = new ModelImpl(ModelDirection.FRONT, x, y, 128);
         models.add(model);
     }
 
@@ -62,24 +61,6 @@ public class GenGameImpl implements GenGame, GenModelGame, Field {
     }
 
     @Override
-    public void start() {
-        System.out.println("start");
-        running = true;
-    }
-
-    @Override
-    public void stop() {
-        System.out.println("stop");
-        running = false;
-    }
-
-    @Override
-    public boolean isRunning() {
-        System.out.println("isRunning");
-        return running;
-    }
-
-    @Override
     public void clean() {
         System.out.println("clean");
     }
@@ -88,6 +69,7 @@ public class GenGameImpl implements GenGame, GenModelGame, Field {
     public synchronized void turn() {
         new ArrayList<>(this.models)
             .forEach(model -> model.turn(this));
+        this.models.removeIf(model -> !model.isAlife());
     }
 
     @Override
