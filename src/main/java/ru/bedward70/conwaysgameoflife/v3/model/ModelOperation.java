@@ -1,4 +1,6 @@
-package ru.bedward70.conwaysgameoflife.v3.game;
+package ru.bedward70.conwaysgameoflife.v3.model;
+
+import ru.bedward70.conwaysgameoflife.v3.game.GenModelGame;
 
 import java.util.concurrent.Callable;
 import java.util.function.Function;

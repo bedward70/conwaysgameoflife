@@ -1,5 +1,7 @@
 package ru.bedward70.conwaysgameoflife.v3.game;
 
+import ru.bedward70.conwaysgameoflife.v3.model.Model;
+
 public interface GenModelGame {
 
 

@@ -1,6 +1,6 @@
 package ru.bedward70.conwaysgameoflife.v3.paint;
 
-import ru.bedward70.conwaysgameoflife.v3.game.Model;
+import ru.bedward70.conwaysgameoflife.v3.model.Model;
 
 public class PaintModelImpl implements PaintModel {
 

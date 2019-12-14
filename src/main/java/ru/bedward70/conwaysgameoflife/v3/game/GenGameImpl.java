@@ -1,10 +1,12 @@
 package ru.bedward70.conwaysgameoflife.v3.game;
 
+import ru.bedward70.conwaysgameoflife.v3.model.Model;
+import ru.bedward70.conwaysgameoflife.v3.model.ModelDirection;
+import ru.bedward70.conwaysgameoflife.v3.model.ModelImpl;
 import ru.bedward70.conwaysgameoflife.v3.paint.PaintModel;
 import ru.bedward70.conwaysgameoflife.v3.paint.PaintModelImpl;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
 

@@ -1,4 +1,4 @@
-package ru.bedward70.conwaysgameoflife.v3.game;
+package ru.bedward70.conwaysgameoflife.v3.model;
 
 public enum ModelDirection {
 
