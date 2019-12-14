@@ -9,6 +9,7 @@ import ru.bedward70.conwaysgameoflife.v3.toolbar.SpeedSlider;
 import ru.bedward70.conwaysgameoflife.v3.toolbar.TurnButton;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 
 public class App {
@@ -24,7 +25,7 @@ public class App {
 
         final AppAction appAction = new AppAction(DEFAULT_DELAY);
 
-        final GenGameImpl game = new GenGameImpl(10, 10);
+        final GenGameImpl game = new GenGameImpl(15, 10);
         appAction.setTurnGame(() -> game.turn());
 
         final GenPanel genPanel = new GenPanel(
@@ -37,10 +38,16 @@ public class App {
         final JToolBar toolBar = new JToolBar();
         toolBar.setFloatable(false);
         toolBar.add(new RunningButton(appAction));
-        toolBar.add(new SpeedSlider(1, 5000, DEFAULT_DELAY, value -> appAction.setUpdateDelay(value)));
+        final Label speedLabel = new Label("" + DEFAULT_DELAY);
+        toolBar.add(new SpeedSlider(1, 5000, DEFAULT_DELAY, value -> {appAction.setUpdateDelay(value);speedLabel.setText("" + value);}));
+        toolBar.add(speedLabel);
         toolBar.add(new TurnButton(() -> appAction.executeTurn()));
         toolBar.add(new CleaningButton(() -> appAction.executeClean()));
 
+        final JToolBar statusBar = new JToolBar();
+        final Label cycleLabel = new Label("Cycles: "  + 0);
+        statusBar.add(cycleLabel);
+        appAction.setCycleConsumer(value -> cycleLabel.setText("Cycles: "  + value));
 
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         SwingUtilities.invokeLater(
@@ -49,7 +56,8 @@ public class App {
                 new GenFrame(
                     "GenFrame",
                     toolBar,
-                    genPanel
+                    genPanel,
+                    statusBar
                 );
             }
         );

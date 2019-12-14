@@ -69,6 +69,16 @@ public class GenGameImpl implements GenGame, GenModelGame, Field {
 
     @Override
     public synchronized void turn() {
+
+        // foods
+        for (int x = 0; x < width; x ++) {
+            for (int y = 0; y < height; y++) {
+                if ((0x00ff & this.foodArray[x][y]) != 0x00ff) {
+                    this.foodArray[x][y] = (byte) ((0x00ff & this.foodArray[x][y]) + 1);
+                }
+            }
+        }
+        // models
         new ArrayList<>(this.models)
             .forEach(model -> model.turn(this));
         this.models.removeIf(model -> !model.isAlife());
@@ -77,7 +87,7 @@ public class GenGameImpl implements GenGame, GenModelGame, Field {
     @Override
     public boolean movelMove(final Model model, final int toX, final int toY) {
         return !(
-                (toX < 0)
+            (toX < 0)
             || (toX >= width)
             || (toY < 0)
             || (toY >= height)
@@ -85,5 +95,12 @@ public class GenGameImpl implements GenGame, GenModelGame, Field {
                 .filter(m -> m != model)
                 .anyMatch(m -> m.getX() == toX && m.getY() == toY)
         );
+    }
+
+    @Override
+    public int eating(int x, int y) {
+        int result = (0x00ff & foodArray[x][y]) / 2;
+        foodArray[x][y] = (byte) result;
+        return result;
     }
 }

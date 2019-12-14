@@ -6,4 +6,6 @@ public interface GenModelGame {
 
 
     boolean movelMove(Model model, int toX, int toY);
+
+    int eating(int x, int y);
 }

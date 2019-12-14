@@ -2,9 +2,13 @@ package ru.bedward70.conwaysgameoflife.v3;
 
 import ru.bedward70.conwaysgameoflife.v3.game.Running;
 
+import javax.swing.*;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class AppAction implements Running, Runnable {
+
+    private int cycle = 0;
 
     private Thread simThread = null;
     /**
@@ -15,6 +19,7 @@ public class AppAction implements Running, Runnable {
     private Runnable turnGame;
     private Runnable repaint;
     private Runnable clean;
+    private Consumer<Integer> cycleConsumer;
 
     public AppAction(int updateDelay) {
         this.updateDelay = updateDelay;
@@ -35,7 +40,15 @@ public class AppAction implements Running, Runnable {
         return this;
     }
 
+    public AppAction setCycleConsumer(Consumer<Integer> cycleConsumer) {
+        this.cycleConsumer = cycleConsumer;
+        return this;
+    }
+
     public void executeTurn() {
+        cycle++;
+        System.out.println("Cycles: " + String.format("%6d", cycle) + " =================");
+        Optional.ofNullable(cycleConsumer).ifPresent(e -> e.accept(cycle));
         Optional.ofNullable(turnGame).ifPresent(e -> e.run());
         Optional.ofNullable(repaint).ifPresent(e -> e.run());
     }
