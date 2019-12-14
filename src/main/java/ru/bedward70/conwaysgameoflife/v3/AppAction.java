@@ -1,21 +1,19 @@
 package ru.bedward70.conwaysgameoflife.v3;
 
-import ru.bedward70.conwaysgameoflife.v3.game.GenGameImpl;
-
 import java.util.Optional;
 
 public class AppAction {
 
-    private Runnable step;
+    private Runnable turnGame;
     private Runnable repaint;
     private Runnable clean;
 
-    public AppAction setStep(Runnable step) {
-        this.step = step;
+    public AppAction setTurnGame(Runnable turnGame) {
+        this.turnGame = turnGame;
         return this;
     }
 
-    public AppAction setRepaint(Runnable repaint) {
+    public AppAction setRepaintPanel(Runnable repaint) {
         this.repaint = repaint;
         return this;
     }
@@ -25,11 +23,8 @@ public class AppAction {
         return this;
     }
 
-    public void executeStep() {
-        Optional.ofNullable(step).ifPresent(e -> e.run());
-    }
-
-    public void executeRepaint() {
+    public void executeTurn() {
+        Optional.ofNullable(turnGame).ifPresent(e -> e.run());
         Optional.ofNullable(repaint).ifPresent(e -> e.run());
     }
 

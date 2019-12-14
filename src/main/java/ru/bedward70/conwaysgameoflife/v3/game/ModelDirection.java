@@ -2,19 +2,31 @@ package ru.bedward70.conwaysgameoflife.v3.game;
 
 public enum ModelDirection {
 
-    FRONT(0),
-    RIGHT(1),
-    BACK(2),
-    LEFT(3);
+    FRONT(0, 0, -1),
+    RIGHT(1, 1, 0),
+    BACK(2, 0, 1),
+    LEFT(3, -1, 0);
 
     private final int index;
+    private final int x;
+    private final int y;
 
-    ModelDirection(int index) {
+    ModelDirection(int index,int x, int y) {
         this.index = index;
+        this.x = x;
+        this.y = y;
     }
 
     public int getIndex() {
         return index;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     public static ModelDirection valueOf(final int index) {

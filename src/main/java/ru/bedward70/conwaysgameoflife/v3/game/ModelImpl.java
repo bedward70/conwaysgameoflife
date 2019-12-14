@@ -6,11 +6,14 @@ public class ModelImpl implements Model {
 
     private int x;
     private int y;
+    private boolean alife;
 
     public ModelImpl(ModelDirection direction, int x, int y) {
         this.direction = direction;
         this.x = x;
         this.y = y;
+
+        this.alife = true;
     }
 
     public ModelDirection getDirection() {
@@ -38,5 +41,38 @@ public class ModelImpl implements Model {
     public ModelImpl setY(int y) {
         this.y = y;
         return this;
+    }
+
+    @Override
+    public void turn(GenModelGame game) {
+        if (alife) {
+            System.out.println("cycle");
+            System.out.println("step " + this + " = " + step(game));
+        } else {
+            System.out.println("dead");
+        }
+    }
+
+    private boolean step(GenModelGame game) {
+        int toX = this.x + direction.getX();
+        int toY = this.y + direction.getY();
+        final boolean result = game.movelMove(this, toX, toY);
+        if (result) {
+            this.x = toX;
+            this.y = toY;
+        }
+        return result;
+    }
+
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("ModelImpl{");
+        sb.append("direction=").append(direction);
+        sb.append(", x=").append(x);
+        sb.append(", y=").append(y);
+        sb.append(", alife=").append(alife);
+        sb.append('}');
+        return sb.toString();
     }
 }

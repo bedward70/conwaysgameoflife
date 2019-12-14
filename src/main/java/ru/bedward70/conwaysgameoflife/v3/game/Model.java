@@ -7,4 +7,6 @@ public interface Model {
     int getX();
 
     int getY();
+
+    void turn(GenModelGame game);
 }
