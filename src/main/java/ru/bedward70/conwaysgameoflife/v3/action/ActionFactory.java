@@ -2,16 +2,19 @@ package ru.bedward70.conwaysgameoflife.v3.action;
 
 import ru.bedward70.conwaysgameoflife.v3.game.GenModelGame;
 import ru.bedward70.conwaysgameoflife.v3.model.ModelDirection;
+import ru.bedward70.conwaysgameoflife.v3.model.ModelImpl;
 import ru.bedward70.conwaysgameoflife.v3.model.ModelSet;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 
 public class ActionFactory {
 
     private static final int OPERATION_BITE_SHIFT = 3;
     private static final int EATING_DELIMITER = 2;
+    private static Random RANDOM = new Random();
 
     private final Map<Integer, ActionTemplate> operationTemplateMap = new HashMap<>();
 
@@ -20,6 +23,7 @@ public class ActionFactory {
         operationTemplateMap.put(1, new ActionTemplate("step", 2, 8,  (gn, b, m, g) -> step(gn, b, m, g)));
         operationTemplateMap.put(2, new ActionTemplate("eating", 4, 8, (gn, b, m, g) -> eating(gn, b, m, g)));
         operationTemplateMap.put(3, new ActionTemplate("new_direction", 0, 4, (gn, b, m, g) -> changeDirection(gn, b, m, g)));
+        operationTemplateMap.put(4, new ActionTemplate("reproduction", 0, 8, (gn, b, m, g) -> reproduction(gn, b, m, g)));
     }
 
     public ModelAction nextOperation(ActionGeneSet geneSet) {
@@ -27,7 +31,7 @@ public class ActionFactory {
         ModelAction result;
         final byte actionGene = geneSet.getCellAndIncreaseCounter();
         final ActionTemplate template = Optional
-            .ofNullable(operationTemplateMap.get(actionGene >>> OPERATION_BITE_SHIFT))
+            .ofNullable(operationTemplateMap.get((0x003F & actionGene) >>> OPERATION_BITE_SHIFT))
             .orElseGet(() -> operationTemplateMap.get(0));
 
         return new ModelAction(
@@ -63,5 +67,26 @@ public class ActionFactory {
             model.setDirection(newDirection);
         }
         return true;
+    }
+    public static boolean reproduction(ActionGeneSet g, Byte b, ModelSet model, GenModelGame game) {
+        final int energy = model.getEnergyForReproduction();
+
+        while (energy > 0) {
+            int x = RANDOM.nextInt(game.getWidth());
+            int y = RANDOM.nextInt(game.getHeight());
+            final boolean result = game.movelMove(null, x, y);
+            if (result) {
+                ModelImpl modelImpl = new ModelImpl(
+                        ModelDirection.valueOf(RANDOM.nextInt(4)),
+                        x,
+                        y,
+                        energy
+                );
+                game.addModel(modelImpl);
+                break;
+            }
+        }
+
+        return energy > 0;
     }
 }

@@ -20,7 +20,7 @@ public class ModelImpl implements Model, ModelSet {
 
         @Override
         public byte getCellAndIncreaseCounter() {
-            return (byte) (0x001F & RANDOM.nextInt());
+            return (byte) (RANDOM.nextInt());
         }
 
         @Override
@@ -75,6 +75,19 @@ public class ModelImpl implements Model, ModelSet {
     @Override
     public void addEnergy(int additional) {
         this.energy = Math.min(this.energy + additional, MAX_ENERGY - 1);
+    }
+
+    @Override
+    public int getEnergyForReproduction() {
+        boolean reproduction = energy >= (MAX_ENERGY * 3 /4);
+        int energyToShare;
+        if (reproduction) {
+            energyToShare = energy - MAX_ENERGY * 2 / 4;
+            energy =  MAX_ENERGY * 2 / 4;
+        } else {
+            energyToShare = 0;
+        }
+        return energyToShare;
     }
 
     @Override

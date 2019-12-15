@@ -25,7 +25,7 @@ public class App {
 
         final AppAction appAction = new AppAction(DEFAULT_DELAY);
 
-        final GenGameImpl game = new GenGameImpl(15, 10);
+        final GenGameImpl game = new GenGameImpl(30, 20);
         appAction.setTurnGame(() -> game.turn());
 
         final GenPanel genPanel = new GenPanel(

@@ -9,4 +9,6 @@ public interface ModelSet extends Model {
     void setY(int y);
 
     void addEnergy(int energy);
+
+    int getEnergyForReproduction();
 }

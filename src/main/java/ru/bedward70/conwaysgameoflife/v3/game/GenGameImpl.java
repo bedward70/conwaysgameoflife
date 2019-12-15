@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
+import static java.util.Objects.isNull;
+
 public class GenGameImpl implements GenGame, GenModelGame, Field {
 
     private final int width;
@@ -46,6 +48,11 @@ public class GenGameImpl implements GenGame, GenModelGame, Field {
     @Override
     public int getHeight() {
         return height;
+    }
+
+    @Override
+    public void addModel(ModelImpl modelImpl) {
+        models.add(modelImpl);
     }
 
     @Override
@@ -92,7 +99,7 @@ public class GenGameImpl implements GenGame, GenModelGame, Field {
             || (toY < 0)
             || (toY >= height)
             || this.models.stream()
-                .filter(m -> m != model)
+                .filter(m -> isNull(model) || m != model)
                 .anyMatch(m -> m.getX() == toX && m.getY() == toY)
         );
     }

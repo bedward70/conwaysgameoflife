@@ -22,7 +22,7 @@ public class PaintStrategySimple implements PaintStrategy {
     public PaintStrategySimple() throws IOException {
         this.foodImg = ImageIO.read(new File("images/food_8_4.png"));
         this.mineralImg = ImageIO.read(new File("images/mineral_8_4.png"));
-        this.ping = ImageIO.read(new File("images/pink_8.png"));
+        this.ping = ImageIO.read(new File("images/rabbit_8.png"));
     }
 
     @Override
