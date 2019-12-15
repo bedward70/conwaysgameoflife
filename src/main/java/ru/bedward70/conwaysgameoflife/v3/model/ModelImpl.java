@@ -1,5 +1,8 @@
 package ru.bedward70.conwaysgameoflife.v3.model;
 
+import ru.bedward70.conwaysgameoflife.v3.action.ActionFactory;
+import ru.bedward70.conwaysgameoflife.v3.action.ActionGeneSet;
+import ru.bedward70.conwaysgameoflife.v3.action.ModelAction;
 import ru.bedward70.conwaysgameoflife.v3.game.GenModelGame;
 
 import java.util.Random;
@@ -10,6 +13,21 @@ public class ModelImpl implements Model, ModelSet {
 
     private static final int MAX_CYCLES = 8;
     private static final int MAX_ENERGY = 256;
+    private static Random RANDOM = new Random();
+
+    private static final ActionFactory ACTION_FACTORY = new ActionFactory();
+    private static ActionGeneSet actionGeneSet = new ActionGeneSet() {
+
+        @Override
+        public byte getCellAndIncreaseCounter() {
+            return (byte) (0x001F & RANDOM.nextInt());
+        }
+
+        @Override
+        public void readCellAndIncreaseCounterByValue(int i) {
+
+        }
+    };
     private ModelDirection direction;
 
     private int x;
@@ -17,7 +35,6 @@ public class ModelImpl implements Model, ModelSet {
     private boolean alife;
     private int energy;
 
-    private Random random = new Random();
 
     public ModelImpl(ModelDirection direction, int x, int y, int energy) {
         this.direction = direction;
@@ -66,36 +83,17 @@ public class ModelImpl implements Model, ModelSet {
             int cycle = 0;
             eat(2);
             while (alife && cycle < MAX_CYCLES) {
-                final byte i = (byte) (0x001F & random.nextInt());
-                ModelOperation operation = nextOperation(i);
-                if (isNull(operation)) {
-                    cycle++;
-                } else {
-                    eat(operation.getEnergy());
-                    cycle += operation.getCycle();
-                    if (alife) {
-                        System.out.println("OP = " + operation.getName() + " : " + operation.getCallable().apply(i, this, game));
-                        System.out.println(this);
-                    }
+                ModelAction operation = ACTION_FACTORY.nextOperation(this.actionGeneSet);
+                eat(operation.getEnergy());
+                cycle += operation.getCycle();
+                if (alife) {
+                    System.out.println("OP = " + operation.getName() + " : " + operation.getCallable().apply(this, game));
+                    System.out.println(this);
                 }
             }
         } else {
             System.out.println("dead");
         }
-    }
-
-    private ModelOperation nextOperation(byte i) {
-        ModelOperation result;
-        if ((i & 0x0018) == 0x0008) {
-            result = new ModelOperation("step", 2, 8, (b, m, g) -> ModelOperation.step(b, m, g));
-        } else if ((i & 0x0018) == 0x0010) {
-            result = new ModelOperation("eating", 4, 8, (b, m, g) -> ModelOperation.eating(b, m, g));
-        } else if ((i & 0x0018) == 0x0018) {
-            result = new ModelOperation("new_direction", 0, 4, (b, m, g) -> ModelOperation.changeDirection(b, m, g));
-        } else {
-            result = null;
-        }
-        return result;
     }
 
     private void eat(int i) {
