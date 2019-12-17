@@ -23,14 +23,25 @@
  */
 package ru.bedward70.conwaysgameoflife.v3;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.awt.FileDialog;
 import java.awt.Label;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import javax.swing.JFrame;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import ru.bedward70.conwaysgameoflife.v3.game.GenGame;
 import ru.bedward70.conwaysgameoflife.v3.game.GenGameImpl;
+import ru.bedward70.conwaysgameoflife.v3.game.GenModelGame;
+import ru.bedward70.conwaysgameoflife.v3.model.ModelImpl;
 import ru.bedward70.conwaysgameoflife.v3.paint.PaintStrategySimple;
 import ru.bedward70.conwaysgameoflife.v3.panel.GenPanel;
-import ru.bedward70.conwaysgameoflife.v3.toolbar.CleaningButton;
+import ru.bedward70.conwaysgameoflife.v3.toolbar.Button;
 import ru.bedward70.conwaysgameoflife.v3.toolbar.RunningButton;
 import ru.bedward70.conwaysgameoflife.v3.toolbar.SpeedSlider;
 import ru.bedward70.conwaysgameoflife.v3.toolbar.TurnButton;
@@ -58,6 +69,8 @@ public final class App {
      */
     private static final int MAX_DELAY_MS = 5000;
 
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
     /**
      * Private constructor.
      */
@@ -73,6 +86,8 @@ public final class App {
         final AppAction action = new AppAction(App.DEFAULT_DELAY_MS);
         final GenGameImpl game = new GenGameImpl(30, 20);
         action.setTurnGame(() -> game.turn());
+        action.setTurnGame(() -> game.clean());
+
         final GenPanel panel = new GenPanel(
             32,
             game,
@@ -82,14 +97,64 @@ public final class App {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         SwingUtilities.invokeLater(
             () -> {
-                new GenFrame(
+                final GenFrame frame = new GenFrame(
                     "GenFrame",
                     createToolBar(action),
                     panel,
                     createStatusBar(action)
                 );
+                action.setLoad(() -> load(frame, game));
+                action.setSave(() -> save(frame, game));
             }
         );
+    }
+
+    private static void load(final JFrame frame, final GenModelGame game) {
+        FileDialog fd = new FileDialog(frame, "Choose a file", FileDialog.LOAD);
+//        fd.setDirectory("C:\\");
+        fd.setFile("*.json");
+        fd.setVisible(true);
+        String path = fd.getDirectory();
+        String filename = fd.getFile();
+        if (filename == null) {
+            System.out.println("You cancelled the choice");
+        } else {
+            System.out.println("You chose " + filename);
+            try {
+                String str = new String ( Files.readAllBytes( Paths.get(path, filename) ) );
+                ModelImpl[] myObjects = OBJECT_MAPPER.readValue(str, ModelImpl[].class);
+                for (ModelImpl model : myObjects) {
+                    if(game.movelMove(model, model.getX(), model.getY())) {
+                        game.addModel(model);
+                    };
+                }
+            } catch (Exception e) {
+
+            }
+        }
+    }
+
+    private static void save(final JFrame frame, final GenGame game) {
+        FileDialog fd = new FileDialog(frame, "Choose a file", FileDialog.SAVE);
+//        fd.setDirectory("C:\\");
+        fd.setFile("*.json");
+        fd.setVisible(true);
+        String path = fd.getDirectory();
+        String filename = fd.getFile();
+        if (filename == null) {
+            System.out.println("You cancelled the choice");
+        } else {
+            System.out.println("You chose " + filename);
+            String str = "Hello";
+            try {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(new File(path, filename)));
+                writer.write(OBJECT_MAPPER.writeValueAsString(game.getModels()));
+                writer.flush();
+                writer.close();
+            } catch (Exception e) {
+
+            }
+        }
     }
 
     /**
@@ -115,7 +180,9 @@ public final class App {
         );
         result.add(speedlabel);
         result.add(new TurnButton(() -> action.executeTurn()));
-        result.add(new CleaningButton(() -> action.executeClean()));
+        result.add(new Button("Очистить", () -> action.executeClean()));
+        result.add(new Button("Load", () -> action.executeLoad()));
+        result.add(new Button("Save", () -> action.executeSave()));
         return result;
     }
 

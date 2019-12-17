@@ -41,6 +41,8 @@ public class AppAction implements Running, Runnable {
     private Runnable turnGame;
     private Runnable repaint;
     private Runnable clean;
+    private Runnable load;
+    private Runnable save;
     private Consumer<Integer> cycleConsumer;
 
     public AppAction(int updateDelay) {
@@ -67,6 +69,28 @@ public class AppAction implements Running, Runnable {
         return this;
     }
 
+    /**
+     * Set load property.
+     *
+     * @param val new load value.
+     * @return the {@link AppAction} for chaining.
+     */
+    public AppAction setLoad(final Runnable val) {
+        this.load = val;
+        return this;
+    }
+
+    /**
+     * Set save property.
+     *
+     * @param val new save value.
+     * @return the {@link AppAction} for chaining.
+     */
+    public AppAction setSave(final Runnable val) {
+        this.save = val;
+        return this;
+    }
+
     public void executeTurn() {
         cycle++;
         System.out.println("Cycles: " + String.format("%6d", cycle) + " =================");
@@ -77,6 +101,14 @@ public class AppAction implements Running, Runnable {
 
     public void executeClean() {
         Optional.ofNullable(clean).ifPresent(e -> e.run());
+    }
+
+    public void executeLoad() {
+        Optional.ofNullable(load).ifPresent(e -> e.run());
+    }
+
+    public void executeSave() {
+        Optional.ofNullable(save).ifPresent(e -> e.run());
     }
 
     @Override

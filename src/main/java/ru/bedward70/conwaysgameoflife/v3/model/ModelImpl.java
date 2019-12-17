@@ -23,6 +23,8 @@
  */
 package ru.bedward70.conwaysgameoflife.v3.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.bedward70.conwaysgameoflife.v3.action.ActionFactory;
 import ru.bedward70.conwaysgameoflife.v3.action.ActionGeneSet;
 import ru.bedward70.conwaysgameoflife.v3.action.ModelAction;
@@ -51,9 +53,13 @@ public class ModelImpl implements Model, ModelSet {
     };
     private ModelDirection direction;
 
+    @JsonProperty("x")
     private int x;
+    @JsonProperty("y")
     private int y;
+    @JsonProperty("alife")
     private boolean alife;
+    @JsonProperty("energy")
     private int energy;
 
 
@@ -99,6 +105,7 @@ public class ModelImpl implements Model, ModelSet {
     }
 
     @Override
+    @JsonIgnore
     public int getEnergyForReproduction() {
         boolean reproduction = energy >= (MAX_ENERGY * 3 /4);
         int energyToShare;

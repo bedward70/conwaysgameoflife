@@ -26,10 +26,10 @@ package ru.bedward70.conwaysgameoflife.v3.toolbar;
 import javax.swing.JButton;
 import java.awt.Dimension;
 
-public class CleaningButton extends JButton {
+public class Button extends JButton {
 
-    public CleaningButton(final Runnable runnable) {
-        super("Очистить");
+    public Button(final String name, final Runnable runnable) {
+        super(name);
         setMaximumSize(new Dimension(100, 50));
         // очистка поля
         addActionListener(e -> runnable.run());

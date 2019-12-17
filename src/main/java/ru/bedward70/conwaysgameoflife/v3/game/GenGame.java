@@ -23,8 +23,12 @@
  */
 package ru.bedward70.conwaysgameoflife.v3.game;
 
+import java.util.List;
+import ru.bedward70.conwaysgameoflife.v3.model.ModelImpl;
+
 public interface GenGame extends Cleaning {
 
     void turn();
 
+    List<ModelImpl> getModels();
 }

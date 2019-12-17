@@ -41,7 +41,7 @@ public class GenGameImpl implements GenGame, GenModelGame, Field {
     private final int height;
     private final byte[][] foodArray;
     private final byte[][] mineralArray;
-    private final LinkedList<Model> models = new LinkedList<>();
+    private final LinkedList<ModelImpl> models = new LinkedList<>();
 
     private Random random = new Random();
 
@@ -59,7 +59,7 @@ public class GenGameImpl implements GenGame, GenModelGame, Field {
         }
         int x = random.nextInt(width);
         int y = random.nextInt(height);
-        Model model = new ModelImpl(ModelDirection.FRONT, x, y, 128);
+        ModelImpl model = new ModelImpl(ModelDirection.FRONT, x, y, 128);
         models.add(model);
     }
 
@@ -93,8 +93,14 @@ public class GenGameImpl implements GenGame, GenModelGame, Field {
     }
 
     @Override
-    public void clean() {
+    public synchronized void clean() {
         System.out.println("clean");
+        models.clear();
+    }
+
+    @Override
+    public LinkedList<ModelImpl> getModels() {
+        return models;
     }
 
     @Override
