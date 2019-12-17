@@ -24,6 +24,7 @@
 package ru.bedward70.conwaysgameoflife.v3.action;
 
 import ru.bedward70.conwaysgameoflife.v3.game.GenModelGame;
+import ru.bedward70.conwaysgameoflife.v3.model.ModelColor;
 import ru.bedward70.conwaysgameoflife.v3.model.ModelDirection;
 import ru.bedward70.conwaysgameoflife.v3.model.ModelImpl;
 import ru.bedward70.conwaysgameoflife.v3.model.ModelSet;
@@ -47,6 +48,7 @@ public class ActionFactory {
         operationTemplateMap.put(2, new ActionTemplate("eating", 4, 8, (gn, b, m, g) -> eating(gn, b, m, g)));
         operationTemplateMap.put(3, new ActionTemplate("new_direction", 0, 4, (gn, b, m, g) -> changeDirection(gn, b, m, g)));
         operationTemplateMap.put(4, new ActionTemplate("reproduction", 0, 8, (gn, b, m, g) -> reproduction(gn, b, m, g)));
+        operationTemplateMap.put(5, new ActionTemplate("food_level", 0, 1, (gn, b, m, g) -> foodLevel(gn, b, m, g)));
     }
 
     public ModelAction nextOperation(ActionGeneSet geneSet) {
@@ -99,17 +101,42 @@ public class ActionFactory {
             int y = RANDOM.nextInt(game.getHeight());
             final boolean result = game.movelMove(null, x, y);
             if (result) {
-                ModelImpl modelImpl = new ModelImpl(
+                ModelImpl modelImpl;
+                if (ModelColor.BLACK.equals(model.getColor())) {
+                    modelImpl = new ModelImpl(
+                        model.getActionGeneSet().copy(1),
+                        model.getColor(),
                         ModelDirection.valueOf(RANDOM.nextInt(4)),
                         x,
                         y,
                         energy
-                );
+                    );
+                } else {
+                    modelImpl = new ModelImpl(
+                        model.getColor(),
+                        ModelDirection.valueOf(RANDOM.nextInt(4)),
+                        x,
+                        y,
+                        energy
+                    );
+                }
                 game.addModel(modelImpl);
                 break;
             }
         }
 
         return energy > 0;
+    }
+
+
+    private Boolean foodLevel(ActionGeneSet gn, Byte b, ModelSet m, GenModelGame g) {
+        byte food = g.getFood(m.getX(), m.getY());
+        byte level = gn.getCellAndIncreaseCounter();
+        if ((0x00ff & food) >= (0x00ff & level)) {
+            gn.readCellAndIncreaseCounterByValue(0);
+        } else {
+            gn.readCellAndIncreaseCounterByValue(1);
+        }
+        return true;
     }
 }

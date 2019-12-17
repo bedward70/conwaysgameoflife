@@ -23,6 +23,8 @@
  */
 package ru.bedward70.conwaysgameoflife.v3.model;
 
+import ru.bedward70.conwaysgameoflife.v3.action.ActionGeneSet;
+
 public interface ModelSet extends Model {
 
     void setDirection(ModelDirection direction);
@@ -34,4 +36,8 @@ public interface ModelSet extends Model {
     void addEnergy(int energy);
 
     int getEnergyForReproduction();
+
+    ModelColor getColor();
+
+    ActionGeneSet getActionGeneSet();
 }

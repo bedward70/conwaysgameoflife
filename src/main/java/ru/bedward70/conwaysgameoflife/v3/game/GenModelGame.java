@@ -32,6 +32,7 @@ public interface GenModelGame {
     boolean movelMove(Model model, int toX, int toY);
 
     int eating(int x, int y);
+    byte getFood(int x, int y);
 
     int getWidth();
 

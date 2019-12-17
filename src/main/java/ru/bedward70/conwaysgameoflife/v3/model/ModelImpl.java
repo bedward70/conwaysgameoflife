@@ -37,9 +37,7 @@ public class ModelImpl implements Model, ModelSet {
     private static final int MAX_CYCLES = 8;
     private static final int MAX_ENERGY = 256;
     private static Random RANDOM = new Random();
-
-    private static final ActionFactory ACTION_FACTORY = new ActionFactory();
-    private static ActionGeneSet actionGeneSet = new ActionGeneSet() {
+    private static ActionGeneSet ACTION_GENE_SET = new ActionGeneSet() {
 
         @Override
         public byte getCellAndIncreaseCounter() {
@@ -50,9 +48,18 @@ public class ModelImpl implements Model, ModelSet {
         public void readCellAndIncreaseCounterByValue(int i) {
 
         }
+
+        @Override
+        public ActionGeneSet copy(int i) {
+            return new ActionGeneSetCycle();
+        }
     };
+
+    private static final ActionFactory ACTION_FACTORY = new ActionFactory();
+    private final ActionGeneSet actionGeneSet;
     private ModelDirection direction;
 
+    private final ModelColor color;
     @JsonProperty("x")
     private int x;
     @JsonProperty("y")
@@ -62,8 +69,13 @@ public class ModelImpl implements Model, ModelSet {
     @JsonProperty("energy")
     private int energy;
 
+    public ModelImpl(final ModelColor color, ModelDirection direction, int x, int y, int energy) {
+        this(ACTION_GENE_SET, color, direction, x, y, energy);
+    }
 
-    public ModelImpl(ModelDirection direction, int x, int y, int energy) {
+    public ModelImpl(final ActionGeneSet actionGeneSet, final ModelColor color, ModelDirection direction, int x, int y, int energy) {
+        this.actionGeneSet = actionGeneSet;
+        this.color = color;
         this.direction = direction;
         this.x = x;
         this.y = y;
@@ -97,6 +109,14 @@ public class ModelImpl implements Model, ModelSet {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public ModelColor getColor() {
+        return color;
+    }
+
+    public ActionGeneSet getActionGeneSet() {
+        return actionGeneSet;
     }
 
     @Override

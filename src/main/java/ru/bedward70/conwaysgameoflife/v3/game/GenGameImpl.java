@@ -24,6 +24,7 @@
 package ru.bedward70.conwaysgameoflife.v3.game;
 
 import ru.bedward70.conwaysgameoflife.v3.model.Model;
+import ru.bedward70.conwaysgameoflife.v3.model.ModelColor;
 import ru.bedward70.conwaysgameoflife.v3.model.ModelDirection;
 import ru.bedward70.conwaysgameoflife.v3.model.ModelImpl;
 import ru.bedward70.conwaysgameoflife.v3.paint.PaintModel;
@@ -57,10 +58,10 @@ public class GenGameImpl implements GenGame, GenModelGame, Field {
                 this.mineralArray[x][y] = (byte) (0x00ff & random.nextInt());
             }
         }
-        int x = random.nextInt(width);
-        int y = random.nextInt(height);
-        ModelImpl model = new ModelImpl(ModelDirection.FRONT, x, y, 128);
-        models.add(model);
+        models.add(new ModelImpl(ModelColor.WHITE, ModelDirection.FRONT, random.nextInt(width), random.nextInt(height), 128));
+        models.add(new ModelImpl(ModelColor.BLACK, ModelDirection.FRONT, random.nextInt(width), random.nextInt(height), 128));
+        models.add(new ModelImpl(ModelColor.PINK, ModelDirection.FRONT, random.nextInt(width), random.nextInt(height), 128));
+        models.add(new ModelImpl(ModelColor.GREEN, ModelDirection.FRONT, random.nextInt(width), random.nextInt(height), 128));
     }
 
     @Override
@@ -138,5 +139,10 @@ public class GenGameImpl implements GenGame, GenModelGame, Field {
         int result = (0x00ff & foodArray[x][y]) / 2;
         foodArray[x][y] = (byte) result;
         return result;
+    }
+
+    @Override
+    public byte getFood(int x, int y) {
+        return foodArray[x][y];
     }
 }

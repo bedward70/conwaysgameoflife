@@ -134,9 +134,10 @@ public class AppAction implements Running, Runnable {
         while (simThread != null) {
             try {
                 Thread.sleep(updateDelay);
-            } catch (InterruptedException e) {
+                executeTurn();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            executeTurn();
         }
     }
 

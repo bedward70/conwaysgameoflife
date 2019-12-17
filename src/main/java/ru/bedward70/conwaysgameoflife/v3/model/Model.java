@@ -36,4 +36,6 @@ public interface Model {
     boolean isAlife();
 
     void turn(GenModelGame game);
+
+    ModelColor getColor();
 }

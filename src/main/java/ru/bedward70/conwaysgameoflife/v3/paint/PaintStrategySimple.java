@@ -23,11 +23,15 @@
  */
 package ru.bedward70.conwaysgameoflife.v3.paint;
 
+import ru.bedward70.conwaysgameoflife.v3.model.ModelColor;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.util.Objects.isNull;
 
@@ -41,11 +45,18 @@ public class PaintStrategySimple implements PaintStrategy {
     private final BufferedImage foodImg;
     private final BufferedImage mineralImg;
     private final BufferedImage ping;
+    private final Map<ModelColor, BufferedImage> map = new HashMap<>();
 
     public PaintStrategySimple() throws IOException {
         this.foodImg = ImageIO.read(new File("images/food_8_4.png"));
         this.mineralImg = ImageIO.read(new File("images/mineral_8_4.png"));
         this.ping = ImageIO.read(new File("images/rabbit_8.png"));
+
+        map.put(ModelColor.WHITE, ImageIO.read(new File("images/rabbit_white_8.png")));
+        map.put(ModelColor.BLACK, ImageIO.read(new File("images/rabbit_black_8.png")));
+        map.put(ModelColor.PINK, ImageIO.read(new File("images/rabbit_red_8.png")));
+        map.put(ModelColor.GREEN, ImageIO.read(new File("images/rabbit_green_8.png")));
+
     }
 
     @Override
@@ -61,7 +72,7 @@ public class PaintStrategySimple implements PaintStrategy {
             paintByModel(big, model, this.foodImg, (0x00ff & model.getFood()), 256);
             paintByModel(big, model, this.mineralImg, (0x00ff & model.getMineral()), 256);
             if (!isNull(model.getModel())) {
-                big.drawImage(this.ping, 0, 0, null);
+                big.drawImage(map.get(model.getModel().getColor()), 0, 0, null);
             }
         }
         big.dispose();

@@ -28,4 +28,6 @@ public interface ActionGeneSet {
     byte getCellAndIncreaseCounter();
 
     void readCellAndIncreaseCounterByValue(int i);
+
+    ActionGeneSet copy(int i);
 }

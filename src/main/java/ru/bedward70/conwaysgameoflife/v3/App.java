@@ -86,7 +86,7 @@ public final class App {
         final AppAction action = new AppAction(App.DEFAULT_DELAY_MS);
         final GenGameImpl game = new GenGameImpl(30, 20);
         action.setTurnGame(() -> game.turn());
-        action.setTurnGame(() -> game.clean());
+        action.setTurnGame(() -> game.turn());
 
         final GenPanel panel = new GenPanel(
             32,
@@ -193,7 +193,7 @@ public final class App {
      */
     private static JToolBar createStatusBar(final AppAction action) {
         final JToolBar result = new JToolBar();
-        final String template = "Cycles: ";
+        final String template = "Cycles: %d";
         final Label cyclelabel = new Label(String.format(template, 0));
         result.add(cyclelabel);
         action.setCycleConsumer(value -> cyclelabel.setText(String.format(template, value)));
